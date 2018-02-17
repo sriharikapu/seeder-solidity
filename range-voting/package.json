@@ -1,0 +1,22 @@
+{
+  "name": "app-name",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "@aragon/client": "^1.0.0-beta.2",
+    "@aragon/os": "^3.0.2",
+    "styled-components": "^3.1.6"
+  },
+  "devDependencies": {
+    "@aragon/cli": "^2.0.0"
+  },
+  "scripts": {
+    "deploy:rinkeby": "truffle migrate --network rinkeby --reset",
+    "deploy:rpc": "truffle migrate --network rpc --reset",
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "publish": "aragon-dev-cli publish"
+  },
+  "keywords": [],
+  "license": "GPL-3.0"
+}
