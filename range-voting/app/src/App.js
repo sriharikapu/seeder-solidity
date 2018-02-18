@@ -89,13 +89,11 @@ class App extends Component {
   }
 
   handleVote = ({ id, score }) => {
-    console.log(this.contract);
-    debugger;
     this.handleSend(this.contract.rpc.methods.vote(id, score));
   }
 
   handleRemoveVote = ({ id }) => {
-    console.log(id);
+    this.handleSend(this.contract.rpc.methods.vote(id, 0));
   }
 
   render() {

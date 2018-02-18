@@ -42,8 +42,9 @@ const mapCandidates = (candidates, userVotes) => {
       name: dehex(names[x]),
       address: addresses[x],
       avgScore,
-      voteCount: voteCounts[x],
-      participantScore: userVotes[x]
+      voteCount: Number(voteCounts[x]),
+      hasVoted: Number(userVotes[x]) !== 0,
+      participantScore: Number(userVotes[x])
     });
   }
 
