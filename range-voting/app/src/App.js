@@ -9,12 +9,12 @@ import VotesTable from './components/VotesTable';
 const GAS = 200000;
 const GAS_PRICE = 2000000000;
 
-const getWeb3Instance = (web3, contract) => {
-  if (!web3) {
+const getWeb3Instance = (web32, contract) => {
+  if (!web32) {
     return null;
   }
 
-  return new web3.eth.Contract(contract.abi, contract.address);
+  return new web32.eth.Contract(contract.abi, contract.address);
 };
 
 class App extends Component {
@@ -30,9 +30,8 @@ class App extends Component {
     // create metamask rpc/seedom ws web3 object
     this.hybridWeb3 = new HybridWeb3(this.handleHybridWeb3Event);
     // hybrid web3 polls for metamask changes
-    this.setupContract(() => {
-      this.hybridWeb3.init();
-    });
+    this.setupContract();
+    this.hybridWeb3.init();
   }
 
   handleHybridWeb3Event = (event, value) => {
@@ -53,8 +52,10 @@ class App extends Component {
   }
 
   async retrieveData() {
-    const { contract, network, account } = this.state;
-    if (contract && network && account) {
+    const { network, account } = this.state;
+    const contract = this.contract;
+
+    if (network && account) {
       const candidateData = await this.handleRetrieve(contract.ws.methods.getCharities());
       const userVoteData = await this.handleRetrieve(contract.ws.methods.getVotes());
       const candidates = mapCandidates(candidateData, userVoteData);
@@ -68,9 +69,7 @@ class App extends Component {
 
   handleSend = (method) => {
     const { account } = this.state;
-    const { contract } = this.state;
     const options = {
-      to: contract.address,
       from: account,
       gas: GAS,
       gasPrice: GAS_PRICE,
@@ -90,16 +89,11 @@ class App extends Component {
       ws: getWeb3Instance(this.hybridWeb3.wsWeb3, firstContract),
       rpc: getWeb3Instance(this.hybridWeb3.rpcWeb3, firstContract),
     }
-
-    this.setState({
-      contract
-    }, done);
+    this.contract = contract;
   }
 
   handleVote = ({ id, score }) => {
-    const { contract } = this.state;
-
-    this.handleSend(contract.rpc.methods.vote(id, score));
+    this.handleSend(this.contract.rpc.methods.vote(id, score));
   }
 
   handleRemoveVote = ({ id }) => {

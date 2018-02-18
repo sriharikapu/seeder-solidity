@@ -45,7 +45,7 @@ class HybridWeb3 {
   }
 
   init() {
-    // set we network
+    // set ws network
     this.wsWeb3.eth.net.getId((error, id) => {
       this.wsNetworkId = id;
       // if no rpc, no need to set up the interval
