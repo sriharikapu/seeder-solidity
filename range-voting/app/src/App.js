@@ -10,10 +10,6 @@ const GAS = 200000;
 const GAS_PRICE = 2000000000;
 
 const getWeb3Instance = (web32, contract) => {
-  if (!web32) {
-    return null;
-  }
-
   return new web32.eth.Contract(contract.abi, contract.address);
 };
 
@@ -93,6 +89,8 @@ class App extends Component {
   }
 
   handleVote = ({ id, score }) => {
+    console.log(this.contract);
+    debugger;
     this.handleSend(this.contract.rpc.methods.vote(id, score));
   }
 

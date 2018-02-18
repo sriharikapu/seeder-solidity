@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports.getContracts = (cwd, networkName) => {
-  const deploymentFile = path.resolve(cwd, `../../../tpt/seedom-solidity/deployment/${networkName}.json`);
+  const deploymentFile = path.resolve(cwd, `../../../seedom-solidity/deployment/${networkName}.json`);
   const deploymentData = fs.readFileSync(deploymentFile);
   const deployment = JSON.parse(deploymentData);
   const releases = deployment.releases.seeder.slice(0, 6);
@@ -16,7 +16,7 @@ module.exports.getContracts = (cwd, networkName) => {
     if (release.hash in outputs) {
       output = outputs[release.hash];
     } else {
-      const outputFile = path.resolve(cwd, `../../../tpt/seedom-solidity/output/${release.hash}.json`);
+      const outputFile = path.resolve(cwd, `../../../seedom-solidity/output/${release.hash}.json`);
       const outputData = fs.readFileSync(outputFile);
       output = JSON.parse(outputData);
       outputs[release.hash] = output;
