@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import './App.css';
 import { AragonApp, AppBar, Countdown } from '@aragon/ui'
 import HybridWeb3 from './utils/HybridWeb3';
@@ -71,9 +72,7 @@ class App extends Component {
       gasPrice: GAS_PRICE,
     };
 
-    method.send(options).then(receipt => {
-      console.log('send');
-    });
+    return method.send(options);
   }
 
   setupContract(done) {
@@ -89,11 +88,25 @@ class App extends Component {
   }
 
   handleVote = ({ id, score }) => {
-    this.handleSend(this.contract.rpc.methods.vote(id, score));
+    return this.handleSend(this.contract.rpc.methods.vote(id, score)).then(receipt => {
+      console.log(receipt);
+      toast.success("Vote submitted!");
+      return this.retrieveData();
+    }).catch(err => {
+      console.log(err);
+      toast.error("Failed to vote");
+    });
   }
 
   handleRemoveVote = ({ id }) => {
-    this.handleSend(this.contract.rpc.methods.vote(id, 0));
+    return this.handleSend(this.contract.rpc.methods.vote(id, 0)).then(receipt => {
+      console.log(receipt);
+      toast.success("Removed vote!");
+      return this.retrieveData();
+    }).catch(err => {
+      console.log(err);
+      toast.error("Failed to remove vote");
+    });
   }
 
   render() {
@@ -104,6 +117,7 @@ class App extends Component {
 
     return (
       <AragonApp publicUrl="/">
+        <ToastContainer />
         <AppLayout>
           <AppLayout.Header>
             <AppBar
