@@ -12,22 +12,30 @@ const VotesTable = ({
       <TableRow>
         <TableHeader title='Charity Name' />
         <TableHeader title="Score" />
+        <TableHeader title="Votes" />
+        <TableHeader title="Avg Score" />
       </TableRow>
     }
   >
   {candidates.map(
     ({
       id,
+      address,
       name,
-      score,
+      voteCount,
+      avgScore,
+      participantScore,
       hasVoted
     }) => (
       <VoteRow
         hasVoted={hasVoted}
-        key={id}
         id={id}
+        key={id}
+        address={address}
+        voteCount={voteCount}
+        avgScore={avgScore}
         name={name}
-        score={score}
+        score={participantScore}
         onSelectVote={onSelectVote}
         onRemoveVote={onRemoveVote}
       />

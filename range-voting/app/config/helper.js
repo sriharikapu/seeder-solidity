@@ -5,7 +5,7 @@ module.exports.getContracts = (cwd, networkName) => {
   const deploymentFile = path.resolve(cwd, `../../../tpt/seedom-solidity/deployment/${networkName}.json`);
   const deploymentData = fs.readFileSync(deploymentFile);
   const deployment = JSON.parse(deploymentData);
-  const releases = deployment.releases.seedom.slice(0, 6);
+  const releases = deployment.releases.seeder.slice(0, 6);
 
   // cache outputs
   const outputs = {};

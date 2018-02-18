@@ -33,6 +33,8 @@ class VoteRow extends React.Component {
     const {
       name,
       score,
+      voteCount,
+      avgScore,
       hasVoted
     } = this.props;
 
@@ -46,10 +48,17 @@ class VoteRow extends React.Component {
             <Text>{score}</Text>
             :
             <DropDown
+              active={this.state.score - 1} // annoyingly, this is in the array index, not a string comparison
               items={scores}
               onChange={this.handleScoreChange}
             />
           }
+        </TableCell>
+        <TableCell>
+          {voteCount}
+        </TableCell>
+        <TableCell>
+          {avgScore}
         </TableCell>
         <TableCell>
           {hasVoted ?
