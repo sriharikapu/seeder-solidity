@@ -1,56 +1,40 @@
-import Web3 from 'web3';
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Aragon from '@aragon/client';
-import { AragonApp, AppBar, Card } from '@aragon/ui'
+import { AragonApp, AppBar, Countdown } from '@aragon/ui'
+import HybridWeb3 from './utils/HybridWeb3';
+import { epochToDate } from './utils/parsers';
 import AppLayout from './components/AppLayout'
 import VotesTable from './components/VotesTable';
 
-const wrapper = new Aragon(
-  '0x94b8a1c323ef9da0b9df74ba0edb45fd7ddd8151',
-  {
-    provider: new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws'),
-    ensRegistryAddress: '0xf242918942086016bbeb036ce93a9b42124016ef'
-  }
-)
-
-// Listen to events and build app state
-// app.store((state, event) => {
-//   debugger;
-//   // Initial state
-//   if (state === null) state = 0
-
-//   // Build state
-//   if (event.event === 'Decrement') {
-//     state--
-
-//     // Send notification
-//     app.notify('Counter decremented', `The counter was decremented to ${state}`)
-//   }
-//   if (event.event === 'Increment') {
-//     state++
-//     app.notify('Counter incremented', `The counter was incremented to ${state}`)
-//   }
-
-//   return state
-// })
-
-// app.state().subscribe((state) => {
-//   debugger;
-//   console.log(state);
-// });
-
 const CANDIDATES = [
   {
-    id: '12345',
+    id: '1',
     name: 'EFF',
+    hasVoted: false
   },
   {
-    id: '67890',
-    name: 'Wikipedia'
+    id: '2',
+    name: 'Wikipedia',
+    score: 7,
+    hasVoted: true
+  },
+  {
+    id: '3',
+    name: 'Jones Creme Soda',
+    score: 7,
+    hasVoted: true
   }
 ];
+
+const endTime = (new Date().getTime() / 1000) + 1000;
+
+const getWeb3Instance = (web3, contract) => {
+  if (!web3) {
+    return null;
+  }
+
+  return new web3.eth.Contract(contract.abi, contract.address);
+};
 
 class App extends Component {
   state = {
@@ -59,6 +43,37 @@ class App extends Component {
     currentVote: null,
     voteVisible: false,
     voteSidebarOpened: false,
+  }
+
+  componentDidMount() {
+    this.hybridWeb3 = new HybridWeb3(this.handleHybridWeb3Event);
+    this.setupContract(() => {
+      console.log('yay');
+    });
+  }
+
+  setupContract(done) {
+    /* global ETH_CONTRACTS */
+    let firstContract = ETH_CONTRACTS[0];
+
+    let contract = {
+      address: firstContract.address,
+      ws: getWeb3Instance(this.hybridWeb3.wsWeb3, firstContract),
+      rpc: getWeb3Instance(this.hybridWeb3.rpcWeb3, firstContract),
+    }
+
+    this.setState({
+      contract
+    }, done);
+  }
+
+  handleVote = ({ id, score }) => {
+    console.log(id);
+    console.log(score);
+  }
+
+  handleRemoveVote = ({ id }) => {
+    console.log(id);
   }
 
   render() {
@@ -70,14 +85,20 @@ class App extends Component {
       <AragonApp publicUrl="/">
         <AppLayout>
           <AppLayout.Header>
-            <AppBar title="Seedom">
-            </AppBar>
+            <AppBar
+              title="Seedom"
+              endContent={
+                <Countdown end={epochToDate(endTime)} />
+              }
+            />
 
           </AppLayout.Header>
           <AppLayout.ScrollWrapper>
             <AppLayout.Content>
               <VotesTable
                 candidates={candidates}
+                onSelectVote={this.handleVote}
+                onRemoveVote={this.handleRemoveVote}
               />
             </AppLayout.Content>
           </AppLayout.ScrollWrapper>

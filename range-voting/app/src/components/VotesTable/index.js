@@ -1,28 +1,35 @@
-import React, { Component } from 'react';
-import { Dropdown, Table, TableCell, TableHeader, TableRow, Card } from '@aragon/ui'
+import React from 'react';
+import { Table, TableHeader, TableRow } from '@aragon/ui'
 import VoteRow from './VoteRow';
 
 const VotesTable = ({
   candidates,
-  onSelectVote
+  onSelectVote,
+  onRemoveVote
 }) => (
   <Table
     header={
       <TableRow>
-        <TableHeader title='Charity Name'>
+        <TableHeader title='Charity Name' />
         <TableHeader title="Score" />
-        </TableHeader>
       </TableRow>
     }
   >
   {candidates.map(
     ({
       id,
-      name
+      name,
+      score,
+      hasVoted
     }) => (
       <VoteRow
+        hasVoted={hasVoted}
+        key={id}
         id={id}
         name={name}
+        score={score}
+        onSelectVote={onSelectVote}
+        onRemoveVote={onRemoveVote}
       />
     )
   )}
