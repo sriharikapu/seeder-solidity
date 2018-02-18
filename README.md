@@ -1,4 +1,4 @@
 # seeder-solidity
 
-`cd range-voting`
+`cd range-voting/app`
 `npm start`
